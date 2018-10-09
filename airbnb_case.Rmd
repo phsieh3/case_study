@@ -1,0 +1,91 @@
+---
+title: "case_study"
+author: "Pei Yang Hsieh"
+date: 2018-10-9
+output: html_document
+---
+
+## Load data
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(p8105.datasets)
+data(nyc_airbnb)
+```
+
+## Rename/clean
+
+```{r}
+nyc_airbnb = 
+  nyc_airbnb %>% 
+  mutate(starts = review_scores_location / 2) %>% 
+  rename(boro = neighbourhood_group)
+```
+
+## Data exploration
+
+
+```{r}
+nyc_airbnb %>% 
+  count(boro)
+
+nyc_airbnb %>% 
+  count(boro, neighbourhood)
+```
+## Some questions
+
+* Does rating vary by neighborhood, room type, or both?
+* How is price related to other variables?
+* Where are rentals located?
+
+* What's most expensive area? What about the least?
+* Which listings have the most unbooked days? 
+* Which area has highest densit yof listings?
+* What are some host characteristics? How many listings? What's associated with ratings?
+
+```{r}
+#Does rating vary?
+
+nyc_airbnb %>%
+ group_by(neighbourhood) %>%
+ summarize(median(starts, na.rm = TRUE)) %>% View
+
+nyc_airbnb %>%
+ group_by(room_type) %>%
+ summarize(median(starts, na.rm = TRUE)) %>% View
+
+airbnb_rating = nyc_airbnb %>%
+ group_by(boro, room_type) %>%
+ summarise(
+   mean(starts, na.rm = TRUE)) 
+   #spread(key = room_type, value = mean_starts))
+
+ggplot(nyc_airbnb, aes(x = starts), color = boro) +
+ geom_histogram() +
+ facet_grid(~room_type)
+
+#Where are rentals located?
+
+nyc_airbnb %>% 
+  ggplot(aes(x = longitude, y = latitude, color = boro)) +
+  geom_point() +
+  facet_grid(~room_type)
+
+#What's most expensive?
+nyc_airbnb %>%
+ select(boro, neighbourhood, price) %>%
+ filter(boro == "Brooklyn") %>%
+ group_by(neighbourhood) %>%
+ summarize(mean_price = mean(price, na.rm = TRUE),
+           median_price = median(price, na.rm = TRUE)) %>%
+ top_n(5) %>% View
+
+nyc_airbnb %>%
+ select(boro, neighbourhood, price) %>%
+ filter(boro == "Brooklyn") %>%
+ group_by(neighbourhood) %>%
+ summarize(mean_price = mean(price, na.rm = TRUE),
+           median_price = median(price, na.rm = TRUE)) %>%
+ arrange(mean_price) %>% View
+```
+
