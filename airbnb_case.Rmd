@@ -35,12 +35,12 @@ nyc_airbnb %>%
 ## Some questions
 
 * Does rating vary by neighborhood, room type, or both?
-* How is price related to other variables?
+* How is price related to other variables? (look at mean and median price across boros, # listings, etc.)
 * Where are rentals located?
 
 * What's most expensive area? What about the least?
-* Which listings have the most unbooked days? 
-* Which area has highest densit yof listings?
+* Which listings have the most unbooked days? (not sure we have this info. arrange by unbooked days)
+* Which area has highest density of listings? (counts of listings by neighborhood)
 * What are some host characteristics? How many listings? What's associated with ratings?
 
 ```{r}
